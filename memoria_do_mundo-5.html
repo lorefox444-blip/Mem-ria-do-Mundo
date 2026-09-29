@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memória do Mundo — História explicada</title>
+<style>
+:root{
+  --bg:#f5f1e8; --paper:#fffdf8; --ink:#24211d; --muted:#6f685f;
+  --accent:#8b3f2f; --accent2:#c98a52; --line:#ddd3c5; --dark:#1f1c19;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{background:var(--dark);color:white;position:sticky;top:0;z-index:10;box-shadow:0 3px 18px #0002}
+.nav{max-width:1150px;margin:auto;padding:16px 20px;display:flex;align-items:center;gap:28px}
+.logo{font-family:Georgia,serif;font-size:22px;font-weight:700;white-space:nowrap}
+.logo span{color:#e5a66e}
+nav{display:flex;gap:18px;margin-left:auto}
+nav a{color:#ddd;text-decoration:none;font-size:14px}
+nav a:hover{color:white}
+.hero{background:linear-gradient(135deg,#30251f,#6d352b);color:white;padding:76px 20px 70px}
+.hero-inner{max-width:1150px;margin:auto}
+.eyebrow{color:#e7b27d;text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:700}
+h1{font:700 clamp(40px,7vw,72px)/.98 Georgia,serif;max-width:800px;margin:14px 0 20px}
+.hero p{max-width:720px;font-size:18px;line-height:1.65;color:#eee}
+.search{margin-top:28px;display:flex;max-width:700px;background:white;border-radius:12px;padding:6px}
+.search input{flex:1;border:0;outline:0;padding:15px;font-size:16px;border-radius:9px}
+.search button,.btn{border:0;background:var(--accent);color:white;padding:13px 19px;border-radius:9px;font-weight:700;cursor:pointer}
+main{max-width:1150px;margin:auto;padding:48px 20px}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:20px}
+h2{font:700 34px Georgia,serif;margin:0}
+.section-title p{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:24px;box-shadow:0 4px 15px #3b29150b;transition:.2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 25px #3b29151a}
+.tag{display:inline-block;background:#eee1d3;color:#75402f;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800;text-transform:uppercase}
+.card h3{font:700 25px Georgia,serif;margin:15px 0 10px}
+.card p{line-height:1.6;color:#625b53}
+.card a{color:var(--accent);font-weight:700;text-decoration:none}
+.feature{margin-top:55px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:32px;display:grid;grid-template-columns:1.2fr .8fr;gap:35px}
+.feature h2{margin-bottom:14px}
+.feature p{line-height:1.75;color:#5f5850}
+.timeline{border-left:3px solid var(--accent2);padding-left:20px}
+.event{margin-bottom:21px}
+.event b{color:var(--accent)}
+.categories{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.category{padding:10px 14px;background:white;border:1px solid var(--line);border-radius:999px;cursor:pointer}
+#results{margin-top:20px;display:none}
+.empty{padding:25px;background:white;border:1px solid var(--line);border-radius:12px;color:var(--muted)}
+footer{background:var(--dark);color:#c9c2ba;margin-top:40px;padding:40px 20px}
+.footer-inner{max-width:1150px;margin:auto;display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+footer strong{color:white;font-family:Georgia,serif}
+footer p{max-width:650px;line-height:1.6;font-size:13px}
+@media(max-width:800px){
+ nav{display:none}.grid{grid-template-columns:1fr}.feature{grid-template-columns:1fr}
+ .hero{padding-top:55px}.search{flex-direction:column;background:transparent;padding:0;gap:8px}
+ .search input,.search button{width:100%}
+}
+
+.card{cursor:pointer;position:relative}
+.btn.small{font-size:13px;padding:9px 12px;margin-top:7px}
+.modal{display:none;position:fixed;inset:0;background:#17120fcc;z-index:50;padding:20px;overflow:auto}
+.modal.open{display:flex;align-items:center;justify-content:center}
+.modal-box{background:var(--paper);max-width:800px;width:100%;max-height:90vh;overflow:auto;border-radius:18px;padding:34px;position:relative;box-shadow:0 20px 60px #0005}
+.modal-box h2{font-size:42px;margin:15px 40px 20px 0}
+.modal-box h3{font:700 23px Georgia,serif;margin-top:28px}
+.modal-box p{font-size:16px;line-height:1.8;color:#554e47}
+.modal-box ul{line-height:1.8;color:#554e47}
+.close{position:absolute;right:18px;top:12px;border:0;background:transparent;font-size:35px;cursor:pointer;color:#555}
+.result-list{display:grid;gap:10px;margin-top:12px}
+.result-item{padding:14px 16px;background:white;border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.result-item:hover{border-color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <div class="logo">Memória <span>do Mundo</span></div>
+    <nav><a href="#explorar">Explorar</a><a href="#destaque">Em destaque</a><a href="#sobre">Sobre</a></nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">História sem complicação</div>
+    <h1>Entenda o passado para compreender o mundo.</h1>
+    <p>Um espaço para descobrir guerras, personagens, sociedades e acontecimentos que mudaram a história — explicados de forma clara, organizada e contextualizada.</p>
+    <div class="search">
+      <input id="searchInput" type="search" placeholder="O que você quer entender? Ex.: Segunda Guerra Mundial">
+      <button onclick="buscar()">Pesquisar</button>
+    </div>
+  </div>
+</section>
+
+<main>
+<section id="explorar">
+  <div class="section-title">
+    <div><h2>Explore a história</h2><p>Explore acontecimentos e ideias que ajudaram a transformar sociedades e o mundo.</p></div>
+  </div>
+  <div class="categories">
+    <button class="category" onclick="filtrar('guerras')">⚔️ Guerras</button>
+    <button class="category" onclick="filtrar('pessoas')">👤 Pessoas</button>
+    <button class="category" onclick="filtrar('civilizações')">🏛️ Civilizações</button>
+    <button class="category" onclick="filtrar('brasil')">🇧🇷 Brasil</button>
+    <button class="category" onclick="filtrar('ciência')">🔬 Ciência</button>
+  </div>
+  <div id="results"></div>
+
+  <div class="grid" id="cards" style="margin-top:22px">
+    <article class="card" data-cat="guerras" data-topic="Primeira Guerra Mundial" onclick="abrirArtigo('Primeira Guerra Mundial')">
+      <span class="tag">Guerras</span><h3>Primeira Guerra Mundial</h3>
+      <p>Entenda as causas, os participantes, os acontecimentos e as consequências do conflito.</p>
+      <button class="btn small">Ler explicação →</button>
+    </article>
+    <article class="card" data-cat="guerras" data-topic="Segunda Guerra Mundial" onclick="abrirArtigo('Segunda Guerra Mundial')">
+      <span class="tag">Guerras</span><h3>Segunda Guerra Mundial</h3>
+      <p>Uma explicação organizada sobre o conflito que ocorreu entre 1939 e 1945.</p>
+      <button class="btn small">Ler explicação →</button>
+    </article>
+    <article class="card" data-cat="pessoas" data-topic="Marie Curie" onclick="abrirArtigo('Marie Curie')">
+      <span class="tag">Pessoas</span><h3>Marie Curie</h3>
+      <p>A trajetória da cientista que teve papel fundamental nas pesquisas sobre radioatividade.</p>
+      <button class="btn small">Ler explicação →</button>
+    </article>
+    <article class="card" data-cat="civilizações" data-topic="Roma Antiga" onclick="abrirArtigo('Roma Antiga')">
+      <span class="tag">Civilizações</span><h3>Roma Antiga</h3>
+      <p>Da formação de Roma à República, ao Império e às transformações de sua sociedade.</p>
+      <button class="btn small">Ler explicação →</button>
+    </article>
+    <article class="card" data-cat="brasil" data-topic="Independência do Brasil" onclick="abrirArtigo('Independência do Brasil')">
+      <span class="tag">Brasil</span><h3>Independência do Brasil</h3>
+      <p>O processo político que levou à separação do Brasil de Portugal em 1822.</p>
+      <button class="btn small">Ler explicação →</button>
+    </article>
+    <article class="card" data-cat="ciência" data-topic="Revolução Científica" onclick="abrirArtigo('Revolução Científica')">
+      <span class="tag">Ciência</span><h3>Revolução Científica</h3>
+      <p>Como novas ideias e métodos transformaram o estudo da natureza entre os séculos XVI e XVII.</p>
+      <button class="btn small">Ler explicação →</button>
+    </article>
+  </div>
+</section>
+
+<section class="feature" id="destaque">
+  <div>
+    <span class="tag">Em destaque · Século XX</span>
+    <h2>Segunda Guerra Mundial</h2>
+    <p id="ww2">A Segunda Guerra Mundial ocorreu entre 1939 e 1945 e envolveu países de vários continentes. O conflito teve diferentes causas e foi resultado de processos políticos, econômicos e militares que se desenvolveram ao longo das décadas anteriores.</p>
+    <p>O site deve apresentar cada tema em etapas: <strong>contexto → causas → acontecimentos → pessoas e grupos envolvidos → consequências → como sabemos disso hoje</strong>. Assim, o visitante não recebe apenas datas, mas entende as relações entre os acontecimentos.</p>
+  </div>
+  <div class="timeline">
+    <div class="event"><b>1939</b><br>Início do conflito na Europa.</div>
+    <div class="event"><b>1941</b><br>O conflito se amplia com a entrada dos Estados Unidos e a guerra no Pacífico.</div>
+    <div class="event"><b>1944</b><br>Desembarque aliado na Normandia e avanço dos Aliados na Europa.</div>
+    <div class="event"><b>1945</b><br>Fim da guerra na Europa e, posteriormente, no Pacífico.</div>
+  </div>
+</section>
+
+<section style="margin-top:55px" id="sobre">
+  <div class="section-title"><div><h2>Como o site explica?</h2><p>História com contexto, fontes e linguagem acessível.</p></div></div>
+  <div class="grid">
+    <div class="card"><h3>📖 Contexto</h3><p>Antes de explicar um acontecimento, mostramos o que estava acontecendo ao redor dele.</p></div>
+    <div class="card"><h3>🔎 Fontes</h3><p>Cada artigo pode indicar livros, documentos, museus e instituições para quem quiser pesquisar mais.</p></div>
+    <div class="card"><h3>🧭 Vários pontos de vista</h3><p>Quando existem interpretações diferentes entre historiadores, elas são identificadas e contextualizadas.</p></div>
+  </div>
+</section>
+</main>
+
+
+<div id="articleModal" class="modal" aria-hidden="true">
+  <div class="modal-box">
+    <button class="close" onclick="fecharArtigo()" aria-label="Fechar">×</button>
+    <span id="modalTag" class="tag"></span>
+    <h2 id="modalTitle"></h2>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><strong>Memória do Mundo</strong><p>Projeto educacional para tornar a história mais compreensível e despertar a curiosidade das pessoas.</p></div>
+    <div><p>Conteúdo histórico deve ser conferido em fontes confiáveis. Esta versão é um protótipo; os artigos completos devem trazer referências específicas.</p></div>
+  </div>
+</footer>
+
+<script>
+const artigos = {
+ "Primeira Guerra Mundial": {cat:"Guerras", keywords:"1914 1918 guerra europa trincheiras", texto:`<p><strong>O que foi?</strong> A Primeira Guerra Mundial ocorreu de 1914 a 1918 e envolveu grandes potências e seus aliados.</p><h3>Por que começou?</h3><p>Rivalidades entre potências, nacionalismos, disputas territoriais, alianças militares e corrida armamentista criaram um ambiente de tensão. O assassinato do arquiduque Francisco Ferdinando, em 1914, desencadeou uma crise que levou ao conflito.</p><h3>O que mudou?</h3><p>A guerra derrubou impérios, alterou fronteiras e transformou a política internacional. Seus efeitos também contribuíram para as tensões que marcaram o período seguinte.</p>`},
+ "Segunda Guerra Mundial": {cat:"Guerras", keywords:"1939 1945 nazismo holocausto hitler europa pacifico", texto:`<p><strong>O que foi?</strong> A Segunda Guerra Mundial ocorreu entre 1939 e 1945 e envolveu países de vários continentes.</p><h3>Como começou?</h3><p>Entre os fatores estavam os efeitos da Primeira Guerra Mundial, crises políticas e econômicas, expansionismo e disputas territoriais. A invasão da Polônia pela Alemanha, em setembro de 1939, levou Reino Unido e França a declararem guerra à Alemanha.</p><h3>Principais acontecimentos</h3><p>O conflito teve frentes na Europa, no Norte da África e na Ásia-Pacífico. Em 1941, a Alemanha invadiu a União Soviética e o ataque japonês a Pearl Harbor levou os Estados Unidos à guerra.</p><h3>Consequências</h3><p>A guerra terminou em 1945. O Holocausto revelou a dimensão do genocídio promovido pelo regime nazista. A ordem internacional mudou profundamente e a criação da ONU foi uma das consequências institucionais do pós-guerra.</p>`},
+ "Revolução Francesa": {cat:"Revoluções", keywords:"1789 frança monarquia revolução república direitos", texto:`<p><strong>O que foi?</strong> A Revolução Francesa começou em 1789 e provocou profundas transformações políticas e sociais na França.</p><h3>Por que aconteceu?</h3><p>Havia desigualdades sociais e fiscais, dificuldades financeiras do Estado, conflitos políticos e influência de ideias iluministas.</p><h3>Por que mudou a história?</h3><p>A revolução enfraqueceu a monarquia, transformou instituições e difundiu debates sobre cidadania, direitos e soberania popular. Seus efeitos ultrapassaram as fronteiras francesas.</p>`},
+ "Revolução Industrial": {cat:"Revoluções", keywords:"industria máquinas fábricas vapor trabalho cidades séculos 18 19", texto:`<p><strong>O que foi?</strong> A Revolução Industrial foi um processo de transformação econômica e tecnológica iniciado na Grã-Bretanha no século XVIII e ampliado posteriormente para outras regiões.</p><h3>O que mudou?</h3><p>Máquinas, fábricas e novas fontes de energia alteraram a produção. O crescimento industrial também acelerou a urbanização e transformou as relações de trabalho.</p><h3>Impacto mundial</h3><p>O processo contribuiu para novas formas de comércio, transportes e produção em massa, além de mudanças sociais profundas e novos conflitos entre trabalhadores e empregadores.</p>`},
+ "Revolução Russa": {cat:"Revoluções", keywords:"1917 rússia bolcheviques lenin czar união soviética", texto:`<p><strong>O que foi?</strong> A Revolução Russa de 1917 derrubou a monarquia russa e levou os bolcheviques ao poder após uma sequência de crises e revoluções.</p><h3>Contexto</h3><p>A Rússia enfrentava desigualdades sociais, dificuldades econômicas, problemas políticos e enormes perdas durante a Primeira Guerra Mundial.</p><h3>Consequências</h3><p>O processo levou à formação do Estado soviético e influenciou a política mundial durante grande parte do século XX.</p>`},
+ "Independência dos Estados Unidos": {cat:"Revoluções", keywords:"1776 treze colônias eua inglaterra declaração independência", texto:`<p><strong>O que foi?</strong> Foi o processo pelo qual as Treze Colônias britânicas da América do Norte romperam com a Grã-Bretanha, culminando na independência declarada em 1776.</p><h3>Contexto</h3><p>Disputas sobre impostos, representação política e autonomia contribuíram para o conflito.</p><h3>Impacto</h3><p>A criação dos Estados Unidos teve grande impacto na política atlântica e influenciou debates posteriores sobre governo e representação.</p>`},
+ "Independência do Brasil": {cat:"Brasil", keywords:"1822 dom pedro portugal brasil império", texto:`<p><strong>O que foi?</strong> A Independência do Brasil foi um processo político que resultou na separação do Brasil de Portugal, formalizada em 1822.</p><h3>Contexto</h3><p>A transferência da corte portuguesa para o Rio de Janeiro em 1808 e as mudanças políticas posteriores alteraram as relações entre Brasil e Portugal.</p><h3>1822</h3><p>Pedro declarou a separação política em setembro de 1822. A independência não ocorreu da mesma maneira em todas as regiões e foi seguida por conflitos e negociações.</p>`},
+ "Abolição da Escravidão no Brasil": {cat:"Brasil", keywords:"1888 escravidão lei áurea tráfico escravizados", texto:`<p><strong>O que aconteceu?</strong> A escravidão foi abolida legalmente no Brasil em 13 de maio de 1888, com a Lei Áurea.</p><h3>Um processo longo</h3><p>A abolição foi resultado de décadas de resistência de pessoas escravizadas, movimentos abolicionistas, mudanças econômicas e decisões políticas.</p><h3>Depois da abolição</h3><p>O fim legal da escravidão não eliminou desigualdades construídas durante séculos. A população negra enfrentou enormes obstáculos sociais e econômicos no período posterior.</p>`},
+ "Queda do Império Romano do Ocidente": {cat:"Civilizações", keywords:"roma 476 império ocidente bárbaros antiguidade", texto:`<p><strong>O que aconteceu?</strong> O Império Romano do Ocidente passou por um longo processo de transformação que tradicionalmente tem 476 como marco simbólico de seu fim.</p><h3>Não foi um único acontecimento</h3><p>Problemas políticos, econômicos e militares, conflitos internos e migrações e invasões de diferentes povos contribuíram para a transformação do poder romano no Ocidente.</p><h3>Legado</h3><p>Instituições, direito, idiomas, arquitetura e tradições culturais romanas continuaram influenciando sociedades posteriores.</p>`},
+ "Egito Antigo": {cat:"Civilizações", keywords:"faraós pirâmides nilo antiguidade egito", texto:`<p><strong>O que foi?</strong> A civilização do Egito Antigo se desenvolveu ao longo de milhares de anos em torno do rio Nilo.</p><h3>Sociedade e cultura</h3><p>O Egito desenvolveu uma organização política centralizada, escrita, grandes projetos arquitetônicos e tradições religiosas próprias.</p><h3>Legado</h3><p>Seus conhecimentos, monumentos e registros continuam sendo importantes fontes para o estudo da Antiguidade.</p>`},
+ "Democracia Ateniense": {cat:"Civilizações", keywords:"atenas grécia democracia cidadãos antiguidade", texto:`<p><strong>O que foi?</strong> Atenas desenvolveu, na Antiguidade, uma forma de participação política que é uma das principais referências históricas para o conceito de democracia.</p><h3>Como funcionava?</h3><p>Parte dos cidadãos homens participava diretamente de decisões políticas. Mulheres, escravizados e estrangeiros não tinham os mesmos direitos políticos.</p><h3>Importância</h3><p>O modelo ateniense influenciou debates posteriores sobre cidadania, participação e governo, embora fosse muito diferente das democracias contemporâneas.</p>`},
+ "Queda de Constantinopla": {cat:"Idade Média", keywords:"1453 bizantino otomano constantinopla império romano oriente", texto:`<p><strong>O que aconteceu?</strong> Em 1453, Constantinopla foi conquistada pelo Império Otomano, encerrando o Império Romano do Oriente.</p><h3>Importância</h3><p>A conquista alterou o equilíbrio político e comercial entre Europa e Oriente. Constantinopla tornou-se um importante centro do Império Otomano.</p>`},
+ "Renascimento": {cat:"Cultura", keywords:"renascimento arte europa séculos 14 15 16 leonardo michelangelo", texto:`<p><strong>O que foi?</strong> O Renascimento foi um conjunto de transformações culturais e intelectuais que ganhou força em partes da Europa entre os séculos XIV e XVI.</p><h3>Características</h3><p>Artistas e estudiosos demonstraram grande interesse por referências da Antiguidade, observação da natureza, humanismo e novas técnicas artísticas.</p><h3>Legado</h3><p>O movimento deixou marcas profundas na arte, literatura, educação e pensamento europeu.</p>`},
+ "Reforma Protestante": {cat:"Religião e sociedade", keywords:"1517 lutero igreja reforma protestantismo europa", texto:`<p><strong>O que foi?</strong> A Reforma Protestante foi um conjunto de movimentos religiosos iniciados na Europa no século XVI que contestaram práticas e autoridades da Igreja Católica.</p><h3>Martinho Lutero</h3><p>Em 1517, Lutero publicou críticas que se tornaram um marco da Reforma. Outros movimentos e líderes também participaram do processo.</p><h3>Consequências</h3><p>A Europa passou por conflitos religiosos e políticos e surgiram diferentes tradições cristãs protestantes.</p>`},
+ "Chegada dos Europeus às Américas": {cat:"Expansão marítima", keywords:"1492 colombo americas povos indígenas colonização europa", texto:`<p><strong>O que aconteceu?</strong> A chegada de navegadores europeus às Américas a partir do final do século XV iniciou contatos permanentes que transformaram profundamente os dois lados do Atlântico.</p><h3>Antes da chegada</h3><p>As Américas já eram habitadas por numerosos povos e sociedades com culturas, línguas, sistemas políticos e conhecimentos próprios.</p><h3>Consequências</h3><p>Seguiram-se conquistas, colonização, epidemias, escravização e enormes transformações demográficas, econômicas e culturais.</p>`},
+ "Revolução Científica": {cat:"Ciência", keywords:"copérnico galileu kepler newton ciência astronomia século 16 17", texto:`<p><strong>O que foi?</strong> A chamada Revolução Científica descreve transformações importantes na maneira de estudar e explicar a natureza, principalmente entre os séculos XVI e XVII.</p><h3>Novas ideias</h3><p>Copérnico, Galileu, Kepler e Newton contribuíram, em diferentes momentos, para novas formas de observar, medir e formular explicações matemáticas.</p><h3>Legado</h3><p>Essas mudanças ajudaram a consolidar práticas que influenciaram profundamente o desenvolvimento da ciência moderna.</p>`},
+ "Marie Curie": {cat:"Pessoas", keywords:"radioatividade polônio rádio nobel física química", texto:`<p><strong>Quem foi?</strong> Marie Curie (1867–1934) foi uma cientista polonesa naturalizada francesa que estudou a radioatividade.</p><h3>Contribuições</h3><p>Em parceria com Pierre Curie e outros pesquisadores, participou de trabalhos que contribuíram para a identificação do polônio e do rádio e para o desenvolvimento dos estudos sobre radioatividade.</p><h3>Reconhecimento</h3><p>Recebeu dois Prêmios Nobel, um de Física e outro de Química.</p>`},
+ "Albert Einstein": {cat:"Pessoas", keywords:"relatividade física nobel 1905 1915", texto:`<p><strong>Quem foi?</strong> Albert Einstein foi um físico nascido na Alemanha que desenvolveu contribuições fundamentais para a física moderna.</p><h3>Relatividade</h3><p>Suas teorias da relatividade transformaram a compreensão de espaço, tempo, movimento e gravidade.</p><h3>Impacto</h3><p>Seu trabalho se tornou uma referência central na física do século XX e influenciou pesquisas posteriores.</p>`},
+ "Mahatma Gandhi": {cat:"Pessoas", keywords:"gandhi índia independência não violência britânico", texto:`<p><strong>Quem foi?</strong> Mohandas Gandhi foi um dos principais líderes do movimento de independência da Índia.</p><h3>Atuação</h3><p>Gandhi defendeu formas de resistência política baseadas na não violência e na mobilização civil contra o domínio britânico.</p><h3>Contexto</h3><p>A independência da Índia foi resultado de um processo amplo, com muitos movimentos, organizações e líderes.</p>`},
+ "Nelson Mandela": {cat:"Pessoas", keywords:"mandela áfrica do sul apartheid 1994 presidente", texto:`<p><strong>Quem foi?</strong> Nelson Mandela foi um líder sul-africano que se tornou uma das figuras centrais da luta contra o apartheid.</p><h3>Fim do apartheid</h3><p>Após décadas de conflito político e resistência, a África do Sul realizou eleições democráticas multirraciais em 1994, e Mandela tornou-se presidente.</p><h3>Importância histórica</h3><p>Sua trajetória está ligada à transição política sul-africana e ao debate sobre reconciliação após o apartheid.</p>`},
+ "Martin Luther King Jr.": {cat:"Pessoas", keywords:"direitos civis racismo estados unidos marcha washington 1963", texto:`<p><strong>Quem foi?</strong> Martin Luther King Jr. foi um líder do movimento pelos direitos civis nos Estados Unidos.</p><h3>Atuação</h3><p>Ele participou de campanhas contra a segregação racial e defendeu a resistência não violenta.</p><h3>Legado</h3><p>Seu trabalho ajudou a ampliar a pressão política por mudanças nos direitos civis nos Estados Unidos.</p>`},
+ "Declaração Universal dos Direitos Humanos": {cat:"Direitos e política", keywords:"1948 onu direitos humanos liberdade igualdade", texto:`<p><strong>O que é?</strong> A Declaração Universal dos Direitos Humanos foi adotada pela Assembleia Geral das Nações Unidas em 1948.</p><h3>Contexto</h3><p>Ela surgiu no contexto do pós-Segunda Guerra Mundial e da criação de novas instituições internacionais.</p><h3>Importância</h3><p>O documento estabeleceu uma referência internacional para direitos e liberdades fundamentais e influenciou constituições e tratados posteriores.</p>`},
+ "Criação da ONU": {cat:"Política internacional", keywords:"1945 nações unidas organização internacional segunda guerra", texto:`<p><strong>O que aconteceu?</strong> A Organização das Nações Unidas foi criada em 1945, no contexto do fim da Segunda Guerra Mundial.</p><h3>Objetivos</h3><p>A organização foi criada para promover cooperação internacional, ajudar a manter a paz e desenvolver relações entre países.</p><h3>Impacto</h3><p>A ONU tornou-se uma das principais instituições da política internacional contemporânea.</p>`},
+ "Guerra Fria": {cat:"Guerras e política", keywords:"eua urss 1947 1991 comunismo capitalismo corrida espacial armas nucleares", texto:`<p><strong>O que foi?</strong> A Guerra Fria foi um período de rivalidade política, militar, econômica e ideológica entre Estados Unidos e União Soviética e seus aliados, principalmente após a Segunda Guerra Mundial.</p><h3>Por que “fria”?</h3><p>As duas superpotências evitaram uma guerra direta em grande escala entre si, mas disputaram influência em várias partes do mundo.</p><h3>Corrida espacial</h3><p>A competição também ocorreu na ciência e tecnologia, incluindo satélites, exploração espacial e missões à Lua.</p>`},
+ "Chegada do Homem à Lua": {cat:"Ciência e tecnologia", keywords:"1969 apollo 11 lua nasa armstrong aldrin", texto:`<p><strong>O que aconteceu?</strong> Em 20 de julho de 1969, a missão Apollo 11 levou seres humanos à superfície da Lua.</p><h3>Contexto</h3><p>O feito ocorreu durante a corrida espacial entre Estados Unidos e União Soviética.</p><h3>Impacto</h3><p>A missão demonstrou avanços importantes em engenharia, computação, comunicação e exploração espacial.</p>`},
+ "Internet": {cat:"Tecnologia", keywords:"web computadores arpanet tecnologia comunicação 20 século", texto:`<p><strong>O que é?</strong> A internet é uma rede mundial de redes de computadores que permite a comunicação e o compartilhamento de informações.</p><h3>Como surgiu?</h3><p>Suas origens estão ligadas a pesquisas em redes de computadores realizadas no século XX, incluindo a ARPANET. A World Wide Web, criada por Tim Berners-Lee, tornou a navegação por páginas muito mais acessível.</p><h3>Como mudou o mundo?</h3><p>A internet transformou comunicação, comércio, educação, entretenimento, ciência e acesso à informação.</p>`},
+ "Revolução Digital": {cat:"Tecnologia", keywords:"computadores chips software digital tecnologia informação", texto:`<p><strong>O que foi?</strong> A Revolução Digital descreve a passagem de tecnologias predominantemente analógicas para sistemas digitais, acelerada a partir da segunda metade do século XX.</p><h3>Transformações</h3><p>Computadores, semicondutores, software e redes digitais mudaram a forma de produzir, armazenar e transmitir informação.</p><h3>Hoje</h3><p>Essas transformações estão presentes em praticamente todos os setores da sociedade.</p>`},
+ "Pandemia de 1918": {cat:"Saúde e sociedade", keywords:"gripe espanhola influenza 1918 pandemia mundo", texto:`<p><strong>O que aconteceu?</strong> Uma pandemia de influenza ocorreu em 1918 e se espalhou por diversas regiões do mundo.</p><h3>Contexto</h3><p>Ela ocorreu no final da Primeira Guerra Mundial, em um período de grande circulação de pessoas.</p><h3>Importância histórica</h3><p>A pandemia mostrou o enorme impacto que doenças infecciosas podem ter sobre sociedades, sistemas de saúde e economia.</p>`},
+ "Peste Negra": {cat:"Idade Média", keywords:"peste bubônica europa século 14 pandemia", texto:`<p><strong>O que foi?</strong> A Peste Negra foi uma grande pandemia que atingiu a Europa, Ásia e Norte da África no século XIV.</p><h3>Consequências</h3><p>A mortalidade foi enorme e provocou mudanças demográficas, econômicas e sociais. A crise também afetou relações de trabalho e estruturas políticas e culturais.</p>`},
+ "Julgamento de Nuremberg": {cat:"Pós-guerra", keywords:"nuremberg nazistas crimes guerra 1945 1946 tribunal", texto:`<p><strong>O que foi?</strong> Os julgamentos de Nuremberg foram processos realizados após a Segunda Guerra Mundial contra importantes líderes do regime nazista.</p><h3>Importância</h3><p>Os julgamentos ajudaram a desenvolver conceitos e precedentes do direito penal internacional relacionados a crimes de guerra e crimes contra a humanidade.</p>`},
+ "Fim do Apartheid": {cat:"Direitos e política", keywords:"apartheid áfrica do sul 1994 eleições racismo mandela", texto:`<p><strong>O que aconteceu?</strong> O apartheid foi um sistema de segregação racial institucionalizada na África do Sul. Após décadas de resistência e negociações, o país realizou eleições democráticas multirraciais em 1994.</p><h3>Consequências</h3><p>A transição marcou uma transformação política profunda, embora problemas sociais e econômicos relacionados ao período anterior tenham continuado.</p>`},
+ "Queda do Muro de Berlim": {cat:"Guerra Fria", keywords:"1989 berlim alemanha muro reunificação guerra fria", texto:`<p><strong>O que aconteceu?</strong> O Muro de Berlim caiu em novembro de 1989, tornando-se um dos símbolos do enfraquecimento dos regimes comunistas do Leste Europeu.</p><h3>Contexto</h3><p>O acontecimento ocorreu durante uma série de mudanças políticas na Europa Oriental e antecedeu a reunificação alemã.</p>`},
+ "Revolução Haitiana": {cat:"Revoluções", keywords:"haiti 1791 1804 escravidão revolta independência", texto:`<p><strong>O que foi?</strong> A Revolução Haitiana foi uma revolta de pessoas escravizadas e outros grupos na colônia francesa de Saint-Domingue que levou à independência do Haiti em 1804.</p><h3>Importância</h3><p>Foi uma transformação histórica decisiva no Atlântico e a única revolução de escravizados que resultou na criação de um Estado independente.</p>`}
+};
+
+const sinonimos = {
+ "segunda guerra":"Segunda Guerra Mundial","2 guerra mundial":"Segunda Guerra Mundial","ww2":"Segunda Guerra Mundial",
+ "primeira guerra":"Primeira Guerra Mundial","1 guerra mundial":"Primeira Guerra Mundial","ww1":"Primeira Guerra Mundial",
+ "maria curie":"Marie Curie","marie":"Marie Curie","einstein":"Albert Einstein","gandhi":"Mahatma Gandhi",
+ "mandela":"Nelson Mandela","martin luther king":"Martin Luther King Jr.","roma":"Queda do Império Romano do Ocidente",
+ "roma antiga":"Queda do Império Romano do Ocidente","egito":"Egito Antigo","atenas":"Democracia Ateniense",
+ "reforma":"Reforma Protestante","lutero":"Reforma Protestante","renascimento":"Renascimento",
+ "revolução francesa":"Revolução Francesa","revolucao francesa":"Revolução Francesa",
+ "revolução industrial":"Revolução Industrial","revolucao industrial":"Revolução Industrial",
+ "revolução russa":"Revolução Russa","revolucao russa":"Revolução Russa",
+ "independência":"Independência do Brasil","independencia":"Independência do Brasil",
+ "escravidão":"Abolição da Escravidão no Brasil","abolicao":"Abolição da Escravidão no Brasil",
+ "1492":"Chegada dos Europeus às Américas","direitos humanos":"Declaração Universal dos Direitos Humanos",
+ "onu":"Criação da ONU","guerra fria":"Guerra Fria","lua":"Chegada do Homem à Lua","apollo 11":"Chegada do Homem à Lua",
+ "internet":"Internet","peste":"Peste Negra","peste negra":"Peste Negra",
+ "nuremberg":"Julgamento de Nuremberg","apartheid":"Fim do Apartheid","muro de berlim":"Queda do Muro de Berlim",
+ "haiti":"Revolução Haitiana"
+};
+
+function normalizar(s){
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w\s]/g," ").replace(/\s+/g," ").trim();
+}
+function abrirArtigo(nome){
+  const a=artigos[nome]; if(!a)return;
+  document.getElementById("modalTag").textContent=a.cat;
+  document.getElementById("modalTitle").textContent=nome;
+  document.getElementById("modalContent").innerHTML=a.texto;
+  const m=document.getElementById("articleModal"); m.classList.add("open"); m.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+}
+function fecharArtigo(){
+  const m=document.getElementById("articleModal"); m.classList.remove("open"); m.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+}
+document.getElementById("articleModal").addEventListener("click",e=>{if(e.target.id==="articleModal")fecharArtigo()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")fecharArtigo()});
+
+function buscar(){
+  const q=document.getElementById("searchInput").value.trim();
+  const r=document.getElementById("results"); r.style.display="block";
+  if(!q){r.innerHTML="<div class='empty'>Digite um acontecimento, pessoa, período ou tema histórico.</div>";return;}
+  const nq=normalizar(q);
+  const sinonimo=Object.keys(sinonimos).find(k=>normalizar(k)===nq);
+  const termoSinonimo=sinonimo?sinonimos[sinonimo]:null;
+
+  let encontrados=Object.keys(artigos).filter(nome=>{
+    const a=artigos[nome];
+    const texto=normalizar(nome+" "+a.cat+" "+a.keywords+" "+a.texto.replace(/<[^>]*>/g,""));
+    const palavras=nq.split(" ").filter(Boolean);
+    return palavras.every(p=>texto.includes(p));
+  });
+
+  if(termoSinonimo && !encontrados.includes(termoSinonimo)) encontrados.unshift(termoSinonimo);
+
+  // Busca por relevância: títulos e palavras-chave aparecem primeiro.
+  encontrados.sort((a,b)=>{
+    const score=(nome)=>{
+      const t=normalizar(nome+" "+artigos[nome].keywords);
+      return t===nq?100:(t.includes(nq)?50:nq.split(" ").filter(p=>t.includes(p)).length*10);
+    };
+    return score(b)-score(a);
+  });
+
+  if(encontrados.length){
+    r.innerHTML="<div class='empty'><strong>"+encontrados.length+" resultado(s) para “"+escapeHtml(q)+"”</strong><div class='result-list'>"+
+      encontrados.map(n=>`<div class="result-item" onclick="abrirArtigo(${JSON.stringify(n)})"><strong>${n}</strong><br><small>${artigos[n].cat} · Clique para ler</small></div>`).join("")+
+      "</div></div>";
+  }else{
+    r.innerHTML="<div class='empty'><strong>Nenhum resultado para “"+escapeHtml(q)+"”.</strong><br>Tente termos como <em>Roma</em>, <em>guerra</em>, <em>Revolução Francesa</em>, <em>Hitler</em>, <em>Internet</em>, <em>Brasil</em> ou <em>Lua</em>.</div>";
+  }
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+
+function filtrar(cat){
+  document.querySelectorAll(".card").forEach(c=>c.style.display="block");
+  const nomes=Object.keys(artigos).filter(n=>normalizar(artigos[n].cat).includes(normalizar(cat)));
+  const r=document.getElementById("results"); r.style.display="block";
+  if(!nomes.length){
+    r.innerHTML="<div class='empty'>Ainda não há artigos nesta categoria.</div>";return;
+  }
+  r.innerHTML="<div class='empty'><strong>"+cat+"</strong><div class='result-list'>"+
+    nomes.map(n=>`<div class="result-item" onclick="abrirArtigo(${JSON.stringify(n)})"><strong>${n}</strong><br><small>${artigos[n].cat} · Ler explicação</small></div>`).join("")+
+    "</div></div>";
+  r.scrollIntoView({behavior:"smooth",block:"center"});
+}
+document.getElementById("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")buscar()});
+</script>
+</body>
+</html>
